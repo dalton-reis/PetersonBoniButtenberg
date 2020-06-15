@@ -1,0 +1,34 @@
+__
+ Tecla ESC: reset camera
+
+
+_ Não implementou
+  - [00:44] Câmera: LookAt
+  - [01:05] Matriz do objeto: fixa? .. não atualiza os valores da exibição da Matriz.
+
+_ Erros
+  - [00:25] Não permite mexer com o mouse o SRU, mesmo após ter inserido a câmera
+  - [00:51] FovY: ERRADO ... não deve escalar o objeto da câmera, mas sim alterar o ângulo de abertura da câmera
+
+_ Ajustes
+	- Todos os labels dos campos para termos em inglês iguais aos usados nos slides
+	- Na minha execução no Unity corta parte da janela de cima e de baixo. No windows ok.
+	- Após deletar uma peça deveria voltar a janela para Fábrica de peças.
+	- ter as texturas certas para o Cubo. E ter opção de não ter texturas após ter escolhido uma textura.
+
+-------------
+
+Os objetivos específicos do trabalho são:
+a) converter a ferramenta de visualização gráfica atual para o motor de jogos Unity;
+b) apresentar uma interface de ajuda em forma de tutorial informando os passos a
+serem seguidos;
+
+
+
+A aplicação desenvolvida deve:
+a) permitir a escolha entre trabalhar em um espaço bidimensional ou tridimensional
+(Requisito Funcional - RF);
+c) disponibilizar um tutorial de ajuda inicial ao usuário (RF);
+d) permitir utilizar o conceito de câmera (RF);
+e) ser desenvolvido na linguagem C# (Requisito Não Funcional - RNF);
+f) utilizar o motor de jogos Unity (RNF).

@@ -1,5 +1,5 @@
 __
- Tecla ESC: reset camera
+ Tecla ESC: reset camera .. não funciona.
 
 
 _ Não implementou

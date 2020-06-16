@@ -488,23 +488,33 @@ public class PropIluminacaoPadrao : MonoBehaviour {
 
     public void AtivaIluminacao(string nomeIluminacao, bool ativo)
     {
-        GameObject.Find(nomeIluminacao).GetComponent<Light>().enabled = ativo;
-
-        GameObject GO = GameObject.Find(nomeIluminacao).transform.GetChild(0).gameObject;        
-
-        if (nomeIluminacao.Contains("Spot"))
+        if (!nomeIluminacao.Contains("Ambiente"))
         {
-            for (int i = 0; i < GO.transform.GetChild(0).GetChild(0).childCount; i++)
+            GameObject.Find(nomeIluminacao).GetComponent<Light>().enabled = ativo;
+
+            GameObject GO = GameObject.Find(nomeIluminacao).transform.GetChild(0).gameObject;
+
+            if (nomeIluminacao.Contains("Spot"))
             {
-                GO.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().enabled = ativo;
-                GO.transform.GetChild(0).GetChild(0).GetChild(i).GetComponent<MeshRenderer>().enabled = ativo;
-            }                
+                for (int i = 0; i < GO.transform.GetChild(0).GetChild(0).childCount; i++)
+                {
+                    GO.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().enabled = ativo;
+                    GO.transform.GetChild(0).GetChild(0).GetChild(i).GetComponent<MeshRenderer>().enabled = ativo;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < GO.transform.childCount; i++)
+                    GO.transform.GetChild(i).GetComponent<MeshRenderer>().enabled = ativo;
+            }
         }
         else
         {
-            for (int i = 0; i < GO.transform.childCount; i++)
-                GO.transform.GetChild(i).GetComponent<MeshRenderer>().enabled = ativo;
-        }
+            for (int i = 0; i < GameObject.Find(nomeIluminacao).transform.childCount; i++)
+            {
+                GameObject.Find(nomeIluminacao).transform.GetChild(i).GetComponent<Light>().enabled = ativo;
+            }
+        }      
     }
 
     public void AtivaCamera(bool status)

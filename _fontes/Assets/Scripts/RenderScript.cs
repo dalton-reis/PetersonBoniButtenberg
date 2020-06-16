@@ -9,7 +9,8 @@ public class RenderScript : MonoBehaviour {
         Vector3 pos = gameObject.transform.position;
         pos.y -= Input.mouseScrollDelta.y * 0.5f;
 
-        if (pos.y > 619.8)
+        // Limita o máximo a ser "scrollado" para cima e para baixo no painel Render. 
+        if (pos.y > 619.8 && pos.y < 673)
         {
             gameObject.transform.position = pos;
             moveObjetos();

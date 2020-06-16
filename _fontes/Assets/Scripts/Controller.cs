@@ -393,7 +393,7 @@ public class Controller : MonoBehaviour {
 
                     foreach (string nomeCuboVis in Global.cuboVisComIluminacao)
                     {
-                        GameObject.Find(nomeCuboVis).GetComponent<MeshRenderer>().enabled = true;
+                        //GameObject.Find(nomeCuboVis).GetComponent<MeshRenderer>().enabled = true;
                         exitemFormas = true;
                     }
 
@@ -589,11 +589,11 @@ public class Controller : MonoBehaviour {
         pos.y = pos.y + valorInc;
         ilumunacao.transform.position = pos;
 
-        // Se a peça "Iluminação já foi selecionada, será devidamente reposicionada"
+        // Se a peça "Iluminação já foi selecionada, será devidamente reposicionada"        
         GameObject IlumPeca = GameObject.Find("Iluminacao" + concatNumber);
 
         if (Global.listaObjetos.Contains(IlumPeca))
-            IlumPeca.transform.position = new Vector3(IlumPeca.transform.position.x, IlumPeca.transform.position.y + valorInc, IlumPeca.transform.position.z);
+            IlumPeca.transform.position = new Vector3(IlumPeca.transform.position.x, pos.y, IlumPeca.transform.position.z);  
     }
 
 
@@ -843,7 +843,10 @@ public class Controller : MonoBehaviour {
             Global.listaEncaixes.Remove(gameObject.name);
             Global.listaEncaixes.Add(gameObject.name, slotDestino);
 
-            reposicionaPosicaoAmbCuboVis();  
+            reposicionaPosicaoAmbCuboVis();
+
+            AtualizaTrasformGameObjectAmb();
+            AtualizaTrasformGameObjectAmb();
         }
 
     }
@@ -917,9 +920,24 @@ public class Controller : MonoBehaviour {
                         {
                             GameObject GO_Peca = GameObject.Find(pair.Key);
                             GO_Peca.transform.position = new Vector3(GO_Peca.transform.position.x, GO_Peca.transform.position.y + 3f, GO_Peca.transform.position.z);
+
+                            for (int j = 0; j < render.transform.GetChild(i).transform.childCount; j++)
+                            {
+                                GameObject GO_PecaAux;
+                                foreach (KeyValuePair<string, string> peca in Global.listaEncaixes)
+                                {
+                                    if (peca.Value == render.transform.GetChild(i).transform.GetChild(j).name)
+                                    {
+                                        GO_PecaAux = GameObject.Find(peca.Key);
+                                        GO_PecaAux.transform.position = new Vector3(GO_PecaAux.transform.position.x, GO_PecaAux.transform.position.y + 3f, GO_PecaAux.transform.position.z);
+                                        break;
+                                    }
+                                }
+                            }
+
                             break;
                         }
-                    }
+                    }                    
                 }                    
 
                 if (!Equals(render.transform.GetChild(i).name, objGrafico.transform.name))
@@ -963,6 +981,7 @@ public class Controller : MonoBehaviour {
             Destroy(GameObject.Find(gameObject.name));
             Global.listaSequenciaSlots.Remove(Global.listaEncaixes[gameObject.name]);
             Global.removeObject(gameObject);
+            AtualizaTrasformGameObjectAmb();
             Global.listaEncaixes.Remove(gameObject.name);
             Global.propriedadePecas.Remove(gameObject.name);
 
@@ -980,9 +999,7 @@ public class Controller : MonoBehaviour {
         {
             Destroy(gameObject);
             Global.listaSequenciaSlots.Remove(Global.listaEncaixes[gameObject.name]);
-            Global.removeObject(gameObject);
-            Global.listaEncaixes.Remove(gameObject.name);
-            Global.propriedadePecas.Remove(gameObject.name);
+            Global.removeObject(gameObject);            
 
             if (Global.GetSlot(gameObject.name).Contains("FormasSlot"))
                 excluiHierarquiaOuAlteraPropriedade(Slots.FormasSlot);
@@ -998,7 +1015,14 @@ public class Controller : MonoBehaviour {
                 if (gameObject.name.Length > "Iluminacao".Length)
                     Destroy(GameObject.Find("LightObjects" + gameObject.name));
                 else
-                    Global.propriedadePecas[Global.gameObjectName].JaInstanciou = false;
+                {
+                    if (Global.propriedadePecas.ContainsKey(gameObject.name))
+                    {
+                        PropIluminacaoPadrao luz = new PropIluminacaoPadrao();
+                        luz.AtivaIluminacao(luz.GetTipoLuzPorExtenso(Global.propriedadePecas[gameObject.name].TipoLuz) + gameObject.name, false);
+                        Global.propriedadePecas[gameObject.name].JaInstanciou = false;
+                    }                        
+                }                
             }                
             else if (Global.GetSlot(gameObject.name).Contains("CameraSlot"))
             {
@@ -1012,10 +1036,12 @@ public class Controller : MonoBehaviour {
                 // Desabilita todos CuboVis.
                 foreach (string nomeCubiVis in Global.cuboVisComIluminacao)
                 {
-                    GameObject.Find(nomeCubiVis).GetComponent<MeshRenderer>().enabled = false;
+                    //GameObject.Find(nomeCubiVis).GetComponent<MeshRenderer>().enabled = false;
                 }
             }
-                
+
+            Global.listaEncaixes.Remove(gameObject.name);
+            Global.propriedadePecas.Remove(gameObject.name);
         }            
     }
 
@@ -1147,7 +1173,7 @@ public class Controller : MonoBehaviour {
 
                     goPecas.transform.position = posGO;
 
-                    // Pega a posição do objeto do objeto a ser excluído
+                    // Pega a posição do objeto a ser excluído
                     posGO = GameObject.Find((string)listaNomeObjGrafico[i]).transform.position;
 
                     // Remove peças dos slos
@@ -1160,10 +1186,12 @@ public class Controller : MonoBehaviour {
                                !GameObject.Find((string)listaNomeObjGrafico[i]).transform.GetChild(j).name.Contains("ObjGraficoSlot"))
                             {
                                 Destroy(GameObject.Find(Global.listaEncaixes[pair.Key]));
-                                Destroy(GameObject.Find(pair.Key));
+                                Destroy(GameObject.Find(pair.Key));                             
                                 Global.listaSequenciaSlots.Remove(Global.listaEncaixes[pair.Key]);
                                 Global.removeObject(GameObject.Find(pair.Key));
                                 Global.listaEncaixes.Remove(pair.Key);
+
+                                DestroyIluminacao(pair.Key);
                                 break;
                             }                                
                         }
@@ -1240,7 +1268,28 @@ public class Controller : MonoBehaviour {
                 break;
         }        
     }
-    
+
+    private void DestroyIluminacao(string key)
+    {
+        PropIluminacaoPadrao luz = new PropIluminacaoPadrao();
+
+        if (key.Contains(Consts.Iluminacao))
+        {
+            Global.propriedadeIluminacao.Remove(key);      
+
+            if (key.Length > "Iluminacao".Length)
+                Destroy(GameObject.Find("LightObjects" + key));
+            else
+            {
+                if (Global.propriedadePecas.ContainsKey(key))
+                    luz.AtivaIluminacao(luz.GetTipoLuzPorExtenso(Global.propriedadePecas[key].TipoLuz) + key, false);
+
+                Global.propriedadePecas[Global.gameObjectName].JaInstanciou = false;
+            }
+                
+        }        
+    }
+
     private void reposicionaPosicaoAmbCuboVis()
     {
         GameObject goAmb = GameObject.Find("GameObjectAmb" + getNumeroSlotObjetoGrafico());
@@ -1327,17 +1376,18 @@ public class Controller : MonoBehaviour {
                 }                
 
                 Destroy(GameObject.Find("PosicaoAmb" + numObj));
-                Destroy(GameObject.Find("CuboVisObjectMain" + numObj));
+                Destroy(GameObject.Find("CuboVisObjectMain" + numObj));                
                 break;
             case 1: //FormasSlot
-                mr = GameObject.Find("CuboAmbiente" + getNumeroSlotObjetoGrafico()).GetComponent<MeshRenderer>();
+                //mr = GameObject.Find("CuboAmbiente" + getNumeroSlotObjetoGrafico()).GetComponent<MeshRenderer>();
+                mr = GameObject.Find("CuboAmbiente" + getNumObjeto(GameObject.Find(Global.listaEncaixes[gameObject.name]).transform.parent.name)).GetComponent<MeshRenderer>();
                 mr.enabled = false;
 
-                mr = GameObject.Find("CuboVis" + getNumeroSlotObjetoGrafico()).GetComponent<MeshRenderer>();
-                mr.enabled = false;
+                //mr = GameObject.Find("CuboVis" + getNumeroSlotObjetoGrafico()).GetComponent<MeshRenderer>();
+                //mr.enabled = false;
 
-                if (Global.cuboVisComIluminacao.Contains("CuboVis" + getNumeroSlotObjetoGrafico()))
-                    Global.cuboVisComIluminacao.Remove("CuboVis" + getNumeroSlotObjetoGrafico());
+                //if (Global.cuboVisComIluminacao.Contains("CuboVis" + getNumeroSlotObjetoGrafico()))
+                //    Global.cuboVisComIluminacao.Remove("CuboVis" + getNumeroSlotObjetoGrafico());
                 break;
             case 2: //TransformacoesSlot
                 GameObject goExcluido = GameObject.Find(gameObject.name + AMB);
@@ -1427,5 +1477,77 @@ public class Controller : MonoBehaviour {
                     break;
             }
         }
-    }    
+    }  
+    
+    private void AtualizaTrasformGameObjectAmb()
+    {     
+        string nomeAmb = "GameObjectAmb" + getNumObjeto(GameObject.Find(Global.listaEncaixes[gameObject.name]).transform.parent.name);
+        int cont = 0;
+        int breakLoop = 50;
+
+        Transform GoAmb = GameObject.Find(nomeAmb).transform;
+
+        while (cont < breakLoop)
+        {
+            if (GoAmb.childCount > 0) 
+                GoAmb = GoAmb.GetChild(0);
+
+            if (GoAmb.name.Contains("CuboAmbiente"))
+            {
+                Vector3 pos = Vector3.zero;
+                Vector3 tam = new Vector3(1, 1, 1);
+                Tamanho tamanho;
+                Posicao posicao;
+
+                if (Global.propriedadePecas.Count > 0)
+                {
+                    // Verifica posição e tamanho do cubo.
+                    foreach (KeyValuePair<string, string> enc in Global.listaEncaixes)
+                    {
+                        if (Equals(enc.Value, "FormasSlot" + getNumeroSlotObjetoGrafico()))
+                        {
+                            if (Global.propriedadePecas.ContainsKey(enc.Key))
+                            {
+                                tamanho = Global.propriedadePecas[enc.Key].Tam;
+                                posicao = Global.propriedadePecas[enc.Key].Pos;
+                                tam = new Vector3(tamanho.X, tamanho.Y, tamanho.Z);
+                                pos = new Vector3(posicao.X *-1, posicao.Y, posicao.Z);
+                                break;
+                            }                            
+                        }
+                    }
+                }                
+
+                GoAmb.localPosition = pos;
+                GoAmb.localRotation = Quaternion.Euler(0,0,0);
+                GoAmb.localScale = tam;
+                break;
+            }
+
+            // Verifica se o GO foi excluído então pega o próximo.
+            if (GoAmb.childCount == 0 && !GoAmb.name.Contains("CuboAmbiente"))
+            {
+                if (GoAmb.parent.childCount > 1)
+                    GoAmb = GoAmb.parent.GetChild(1);
+            }
+
+            if (GoAmb.name.Contains(Consts.Transladar))
+            {
+                GoAmb.localRotation = Quaternion.Euler(0, 0, 0);
+                GoAmb.localScale = new Vector3(1, 1, 1);
+            }
+            else if (GoAmb.name.Contains(Consts.Rotacionar))
+            {
+                GoAmb.localPosition = Vector3.zero;
+                GoAmb.localScale = new Vector3(1, 1, 1);
+            }
+            else if (GoAmb.name.Contains(Consts.Escalar))
+            {
+                GoAmb.localPosition = Vector3.zero;
+                GoAmb.localRotation = Quaternion.Euler(0, 0, 0);                
+            }  
+
+            cont++;
+        }
+    }
 }

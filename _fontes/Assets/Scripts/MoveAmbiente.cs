@@ -18,7 +18,6 @@ public class MoveAmbiente : MonoBehaviour {
     private Vector3 targetRotInicial;
     private bool mouseEnter;
 
-
     void Start () {
         positionInicial = new Vector3(camera.transform.position.x, camera.transform.position.y, camera.transform.position.z);
         rotaionInicial = new Vector3(camera.transform.rotation.x, camera.transform.rotation.y, camera.transform.rotation.z);
@@ -26,20 +25,15 @@ public class MoveAmbiente : MonoBehaviour {
         targetRotInicial = new Vector3(target.transform.rotation.x, target.transform.rotation.y, target.transform.rotation.z);
     }
 	
-	// Update is called once per frame
 	void Update () {        
 
         if (VisualizadorGrafScript.entrouVisualizadorGrafico)
         {
             if (Input.GetMouseButton(0))
             {
-                Vector3 targetPos = new Vector3(target.transform.position.x /*+ 500f*/,
+                Vector3 targetPos = new Vector3(target.transform.position.x,
                                                 target.transform.position.y,
                                                 target.transform.position.z);
-
-                //transform.localRotation = Quaternion.Euler(target.transform.position.x, Input.GetAxis("Mouse Y") * speed, 0f);
-
-                //transform.Rotate(targetPos, Input.GetAxis("Vertical") * speed);
 
                 transform.RotateAround(targetPos, transform.up, Input.GetAxis("Mouse X") * speed);
                 transform.RotateAround(targetPos, transform.right, -Input.GetAxis("Mouse Y") * speed);

@@ -19,19 +19,20 @@ public class PropObjetoGraficoScript : MonoBehaviour {
             });
 
         // Iniciando.
-        if (Global.gameObjectName == null)
-        {
-            Global.propriedadePecas[Global.gameObjectName].Ativo = true;
-        }
-        else
+        //if (Global.gameObjectName == null)
+        //{
+        //    Global.propriedadePecas[Global.gameObjectName].Ativo = true;
+        //}
+
+        if (Global.gameObjectName != null)
         {
             if (!Global.propriedadePecas[Global.gameObjectName].JaInstanciou)
             {
                 Global.propriedadePecas[Global.gameObjectName].JaInstanciou = true;
                 Global.propriedadePecas[Global.gameObjectName].Ativo = true;
-            }                
+            }
 
-            goObjetoGrafico = GameObject.Find("PropObjGrafico");            
+            goObjetoGrafico = GameObject.Find("PropObjGrafico");
 
             nomePeca = "ObjetoGraficoP";
 
@@ -45,8 +46,7 @@ public class PropObjetoGraficoScript : MonoBehaviour {
 
             // Toggle.
             goObjetoGrafico.transform.GetChild(2).GetComponent<Toggle>().isOn = Global.propriedadePecas[Global.gameObjectName].Ativo;
-        }
-
+        }    
         
     }  
     
@@ -94,6 +94,8 @@ public class PropObjetoGraficoScript : MonoBehaviour {
 
                 if (existePropriedade)
                     GameObject.Find(Global.propriedadePecas[Global.gameObjectName].NomeCuboAmbiente).GetComponent<MeshRenderer>().enabled = Global.propriedadePecas[peca].Ativo;
+                else
+                    GameObject.Find(Global.propriedadePecas[Global.gameObjectName].NomeCuboAmbiente).GetComponent<MeshRenderer>().enabled = true;
             }
         }
     }

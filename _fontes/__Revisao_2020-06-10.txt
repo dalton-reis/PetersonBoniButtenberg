@@ -9,6 +9,7 @@ _ Não implementou
 _ Erros
   - [00:25] Não permite mexer com o mouse o SRU, mesmo após ter inserido a câmera
   - [00:51] FovY: ERRADO ... não deve escalar o objeto da câmera, mas sim alterar o ângulo de abertura da câmera
+  - rotação x translação diferente do VisEdu-CG ... invertido translação x rotação
 
 _ Ajustes
 	- Todos os labels dos campos para termos em inglês iguais aos usados nos slides
@@ -20,15 +21,17 @@ _ Ajustes
 
 Os objetivos específicos do trabalho são:
 a) converter a ferramenta de visualização gráfica atual para o motor de jogos Unity;
+ .. faltou algumas funções
 b) apresentar uma interface de ajuda em forma de tutorial informando os passos a
 serem seguidos;
-
+ .. não implementou
 
 
 A aplicação desenvolvida deve:
 a) permitir a escolha entre trabalhar em um espaço bidimensional ou tridimensional
 (Requisito Funcional - RF);
+  .. não implementou
 c) disponibilizar um tutorial de ajuda inicial ao usuário (RF);
+  .. não implementou
 d) permitir utilizar o conceito de câmera (RF);
-e) ser desenvolvido na linguagem C# (Requisito Não Funcional - RNF);
-f) utilizar o motor de jogos Unity (RNF).
+  .. +/-

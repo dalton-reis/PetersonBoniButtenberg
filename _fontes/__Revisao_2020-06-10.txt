@@ -7,15 +7,15 @@ _ Não implementou
   - [01:05] Matriz do objeto: fixa? .. não atualiza os valores da exibição da Matriz.
 
 _ Erros
-  - [00:25] Não permite mexer com o mouse o SRU, mesmo após ter inserido a câmera
+-> [00:25] Não permite mexer com o mouse o SRU, mesmo após ter inserido a câmera
   - [00:51] FovY: ERRADO ... não deve escalar o objeto da câmera, mas sim alterar o ângulo de abertura da câmera
   - rotação x translação diferente do VisEdu-CG ... invertido translação x rotação
 
 _ Ajustes
-	- Todos os labels dos campos para termos em inglês iguais aos usados nos slides
-	- Na minha execução no Unity corta parte da janela de cima e de baixo. No windows ok.
-	- Após deletar uma peça deveria voltar a janela para Fábrica de peças.
-	- ter as texturas certas para o Cubo. E ter opção de não ter texturas após ter escolhido uma textura.
+-> Todos os labels dos campos para termos em inglês iguais aos usados nos slides
+- Na minha execução no Unity corta parte da janela de cima e de baixo. No windows ok.
+		- Após deletar uma peça deveria voltar a janela para Fábrica de peças.
+-> ter as texturas certas para o Cubo. E ter opção de não ter texturas após ter escolhido uma textura.
 
 -------------
 

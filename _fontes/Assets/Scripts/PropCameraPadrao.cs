@@ -45,19 +45,19 @@ public class PropCameraPadrao : MonoBehaviour {
         PosY = gameObject.transform.GetChild(1).GetChild(1).GetChild(0).GetComponent<TMP_InputField>();
         PosZ = gameObject.transform.GetChild(1).GetChild(2).GetChild(0).GetComponent<TMP_InputField>();
 
-        LookAtX = gameObject.transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<TMP_InputField>();
-        LookAtY = gameObject.transform.GetChild(2).GetChild(1).GetChild(1).GetComponent<TMP_InputField>();
-        LookAtZ = gameObject.transform.GetChild(2).GetChild(2).GetChild(1).GetComponent<TMP_InputField>();
+        //LookAtX = gameObject.transform.GetChild(2).GetChild(0).GetChild(1).GetComponent<TMP_InputField>();
+        //LookAtY = gameObject.transform.GetChild(2).GetChild(1).GetChild(1).GetComponent<TMP_InputField>();
+        //LookAtZ = gameObject.transform.GetChild(2).GetChild(2).GetChild(1).GetComponent<TMP_InputField>();
 
-        FOV = gameObject.transform.GetChild(4).GetChild(1).GetComponent<TMP_InputField>();
+        FOV = gameObject.transform.GetChild(3).GetChild(1).GetComponent<TMP_InputField>();
 
         PosX.text = "100";
         PosY.text = "300";
         PosZ.text = "300";
 
-        LookAtX.text = "0";
-        LookAtY.text = "0";
-        LookAtZ.text = "0";
+        //LookAtX.text = "0";
+        //LookAtY.text = "0";
+        //LookAtZ.text = "0";
 
         FOV.text = "45";
 
@@ -73,9 +73,9 @@ public class PropCameraPadrao : MonoBehaviour {
         Global.propCameraGlobal.PropInicial.PosY = goCameraObj.transform.position.y;
         Global.propCameraGlobal.PropInicial.PosZ = goCameraObj.transform.position.z;
 
-        Global.propCameraGlobal.PropInicial.LookAtX = goCameraObj.transform.GetChild(0).transform.rotation.x;
-        Global.propCameraGlobal.PropInicial.LookAtY = goCameraObj.transform.GetChild(0).transform.rotation.y;
-        Global.propCameraGlobal.PropInicial.LookAtZ = goCameraObj.transform.GetChild(0).transform.rotation.z;
+        //Global.propCameraGlobal.PropInicial.LookAtX = goCameraObj.transform.GetChild(0).transform.rotation.x;
+        //Global.propCameraGlobal.PropInicial.LookAtY = goCameraObj.transform.GetChild(0).transform.rotation.y;
+        //Global.propCameraGlobal.PropInicial.LookAtZ = goCameraObj.transform.GetChild(0).transform.rotation.z;
 
         Global.propCameraGlobal.PropInicial.FOV = new Vector2(goCameraObj.transform.localScale.x / FOV_INICIAL, goCameraObj.transform.localScale.y / FOV_INICIAL);
         
@@ -107,12 +107,12 @@ public class PropCameraPadrao : MonoBehaviour {
             podeAtualizarCamera = true;
         }
 
-        if (inputSelected == InputSelected.InputLookAtX)
-            Global.propCameraGlobal.LookAtX = float.Parse(validaVazio(inputValue), CultureInfo.InvariantCulture.NumberFormat);
-        else if (inputSelected == InputSelected.InputLookAtY)
-            Global.propCameraGlobal.LookAtY = float.Parse(validaVazio(inputValue), CultureInfo.InvariantCulture.NumberFormat);
-        else if (inputSelected == InputSelected.InputLookAtZ)
-            Global.propCameraGlobal.LookAtZ = float.Parse(validaVazio(inputValue), CultureInfo.InvariantCulture.NumberFormat);
+        //if (inputSelected == InputSelected.InputLookAtX)
+        //    Global.propCameraGlobal.LookAtX = float.Parse(validaVazio(inputValue), CultureInfo.InvariantCulture.NumberFormat);
+        //else if (inputSelected == InputSelected.InputLookAtY)
+        //    Global.propCameraGlobal.LookAtY = float.Parse(validaVazio(inputValue), CultureInfo.InvariantCulture.NumberFormat);
+        //else if (inputSelected == InputSelected.InputLookAtZ)
+        //    Global.propCameraGlobal.LookAtZ = float.Parse(validaVazio(inputValue), CultureInfo.InvariantCulture.NumberFormat);
 
         if (inputSelected == InputSelected.InputFOV)
         {

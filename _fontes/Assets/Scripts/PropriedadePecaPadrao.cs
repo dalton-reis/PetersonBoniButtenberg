@@ -150,7 +150,7 @@ public abstract class PropriedadePecaPadrao : MonoBehaviour {
                 }
                 else if (tipoTransformacao == typeTransformacao.Rotacionar)
                 {
-                    goTransformacaoAmb.transform.localRotation = Quaternion.Euler(x, y, z);
+                    goTransformacaoAmb.transform.localRotation = Quaternion.Euler(x, y*-1, z*-1);
                     goTransformacaoVis.transform.localRotation = Quaternion.Euler(x, y, z);
                 }
                 else

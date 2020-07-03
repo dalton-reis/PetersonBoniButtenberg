@@ -13,7 +13,7 @@ public static class PosicaoGlobal
     public static float x, y, z;
 }
 
-public class Global : MonoBehaviour {   
+public class Global : MonoBehaviour {     
 
     public static List<GameObject> listaObjetos;
     public static List<string> listaSequenciaSlots = new List<string>();
@@ -42,10 +42,11 @@ public class Global : MonoBehaviour {
     public static GameObject posAmb;
     public static bool cameraAtiva;
     public static PropriedadeCamera propCameraGlobal = new PropriedadeCamera();
-
+    public static bool Grafico2D;    
 
     public static void addObject(GameObject go)
     {
+        
         if (listaObjetos == null)
             listaObjetos = new List<GameObject>();
 

@@ -53,7 +53,8 @@ public class Util_VisEdu : MonoBehaviour {
         {
             for (int i = 0; i < enabledObject.transform.childCount; i++)
             {
-                if (!enabledObject.transform.GetChild(i).name.Contains("Spline") && !enabledObject.transform.GetChild(i).name.Contains("Poligono"))
+                if (!enabledObject.transform.GetChild(i).name.Contains("Spline") && !enabledObject.transform.GetChild(i).name.Contains("Poligono") &&
+                    !enabledObject.transform.GetChild(i).name.Contains("GO_Pecas") && !enabledObject.transform.GetChild(i).name.Contains("GO_ObjetosGraficos"))
                 {
                     // Se render for false é porque é pra alterar os colliders da fabrica de peças.
                     if (!render)

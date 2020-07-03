@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class FabricaPecas : MonoBehaviour {
@@ -36,8 +37,8 @@ public class FabricaPecas : MonoBehaviour {
                     fabrica = false;
                 }
             }
-        }
+        }                 
+    }
 
-                 
-    }    
+    
 }

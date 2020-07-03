@@ -9,7 +9,7 @@ enum Transforms {PosX, PosY, PosZ};
 
 public class PropCuboScript : PropCuboPadrao {
 
-    public Toggle toggleField;
+    public Toggle toggleField;   
 
     public void Start()
     {
@@ -21,6 +21,8 @@ public class PropCuboScript : PropCuboPadrao {
     {
         if (jaClicouEmAlgumObjeto() && Global.gameObjectName.Contains(Consts.Cubo))
         {
+            EnableLabelZ();
+
             if (!inicializou() || pieceChanged())
                 mainMethod();
 
@@ -35,6 +37,29 @@ public class PropCuboScript : PropCuboPadrao {
     private void AdicionaValorPropriedadeToggle()
     {
         toggleChanged();
+    }
+
+    private void EnableLabelZ()
+    {
+        GameObject labelTam = GameObject.Find("LabelTamanhoZCubo");
+        GameObject labelPos = GameObject.Find("LabelPosicaoZCubo");
+
+        if (Global.Grafico2D)
+        {
+            if (labelTam != null)
+                labelTam.transform.localPosition = new Vector3(labelTam.transform.localPosition.x, labelTam.transform.localPosition.y, 100000);
+
+            if (labelPos != null)
+                labelPos.transform.localPosition = new Vector3(labelPos.transform.localPosition.x, labelPos.transform.localPosition.y, 100000);
+        }
+        else
+        {
+            if (labelTam != null)
+                labelTam.transform.localPosition = new Vector3(labelTam.transform.localPosition.x, labelTam.transform.localPosition.y, 0.000111648f);
+
+            if (labelPos != null)
+                labelPos.transform.localPosition = new Vector3(labelPos.transform.localPosition.x, labelPos.transform.localPosition.y, 0.000111648f);            
+        }        
     }
 
 

@@ -23,6 +23,7 @@ public class MoveAmbiente : MonoBehaviour {
         rotaionInicial = new Vector3(camera.transform.rotation.x, camera.transform.rotation.y, camera.transform.rotation.z);
         targetPosInicial = new Vector3(target.transform.position.x, target.transform.position.y, target.transform.position.z);
         targetRotInicial = new Vector3(target.transform.rotation.x, target.transform.rotation.y, target.transform.rotation.z);
+
     }
 	
 	void Update () {        
@@ -52,6 +53,6 @@ public class MoveAmbiente : MonoBehaviour {
             camera.transform.localRotation = new Quaternion(rotaionInicial.x, rotaionInicial.y, rotaionInicial.z, 0f);
         }
             
-    }
-    
+    }    
+
 }

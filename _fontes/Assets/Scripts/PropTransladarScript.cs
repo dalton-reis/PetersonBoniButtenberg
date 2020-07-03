@@ -8,10 +8,14 @@ using UnityEngine.UI;
 
 public class PropTransladarScript : PropriedadePecaPadrao
 {
+    public GameObject label;
+
     void Update()
     {     
         if (jaClicouEmAlgumObjeto() && Global.gameObjectName.Contains(Consts.Transladar))
         {
+            label.SetActive(!Global.Grafico2D);
+
             tipoTransformacao = typeTransformacao.Transladar;
 
             if (!inicializou() || pieceChanged())

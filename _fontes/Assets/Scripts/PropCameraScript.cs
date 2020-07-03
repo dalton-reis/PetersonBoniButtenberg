@@ -10,6 +10,8 @@ public class PropCameraScript : PropCameraPadrao {
     public Transform cuboAmb;
     public Camera cam;
 
+    private float time;
+
     public void Start()
     {
         if (mainInputField != null)
@@ -20,6 +22,14 @@ public class PropCameraScript : PropCameraPadrao {
 
     void Update()
     {
+        time += Time.deltaTime;
+
+        if (time >= 3 && GameObject.Find("PropCamera").GetComponent<MeshRenderer>().enabled)
+        {
+            AtualizaPainel();
+            time = 0;
+        }
+
         if (jaClicouEmAlgumObjeto() && Global.propCameraGlobal.ExisteCamera)
         {
             if (!Global.propCameraGlobal.JaIniciouValores)
@@ -37,5 +47,24 @@ public class PropCameraScript : PropCameraPadrao {
     {
         if (gameObject.GetComponent<TMP_InputField>().text != string.Empty)
             updatePosition(cam);
+    }
+
+    private void AtualizaPainel()
+    {
+        GameObject FOV = GameObject.Find("LabelFOVCamera");
+        GameObject labelPosicao = GameObject.Find("LabelPosicaoCamera");
+        
+        float FovY = FOV.transform.localPosition.y;
+
+        if (Global.Grafico2D)
+        {
+            labelPosicao.transform.localPosition = new Vector3(labelPosicao.transform.localPosition.x, labelPosicao.transform.localPosition.y, 50);
+            FOV.transform.localPosition = new Vector3(FOV.transform.localPosition.x, 0.110f, 50);
+        }
+        else
+        {
+            labelPosicao.transform.localPosition = new Vector3(labelPosicao.transform.localPosition.x, labelPosicao.transform.localPosition.y, -2.999623f);
+            FOV.transform.localPosition = new Vector3(FOV.transform.localPosition.x, 0, -2.999623f);
+        }
     }
 }

@@ -15,4 +15,12 @@ public class BotaoFabPecas : MonoBehaviour {
         visEdu = new Util_VisEdu();
         visEdu.enableColliderFabricaPecas(true, true);
     }
+
+    public void CallOnMouseDown()
+    {
+        if (Tutorial.estaExecutandoTutorial)
+            Tutorial.Nivel = "4.2";
+
+        OnMouseDown();       
+    }
 }

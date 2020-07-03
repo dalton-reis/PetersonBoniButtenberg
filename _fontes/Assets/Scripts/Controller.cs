@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 
@@ -39,6 +40,7 @@ public class Controller : MonoBehaviour {
     private string objName;
     private string numObjetoGrafico;
     private Util_VisEdu criaFormas;
+    private Vector3 OBjGraficoPeca;
 
     private List<GameObject> listaAuxRender = new List<GameObject>();
 
@@ -59,21 +61,324 @@ public class Controller : MonoBehaviour {
         //{
         //    Global.iniciaListaSequenciaSlots(0);
         //    Global.podeInciarLista = false;
-        //}
+        //}   
 
+        OBjGraficoPeca = new Vector3(695.9f, 643.0f, -871.2f);
     }
 
     private void Update()
     {
-        //Global.atualizaListaSlot();
-
         scanPos = gameObject.transform.position;
 
         if (posicaoColliderDestino != null)
             dropPeca = posicaoColliderDestino.GetComponent<DropPeca>();
 
-        //if (pecaVisible)
-        //    demonstraObjeto.SetActive(true);        
+        // Tutorial Dinâmico.  [Início]
+        if (Tutorial.passoTutorial != Tutorial.Passo.PulouTutorial)
+        {
+            if (Tutorial.passoTutorial == Tutorial.Passo.FistTime)
+            {
+                Tutorial.MensagemTutorial();                
+            }
+            else if (Tutorial.passoTutorial == Tutorial.Passo.PrimeiroPasso && !Tutorial.PrimeiroPassoExecutado)
+            {                
+                if (Tutorial.AnswerMsg != 0)
+                {
+                    float distance = Tutorial.GetDistance();
+
+                    Tutorial.SetMessageImage(true);
+
+                    if (distance > 0)
+                    {
+                        Tutorial.GOTutorial.transform.position = Vector3.Lerp(Tutorial.GOTutorial.transform.position,
+                            new Vector3(GameObject.Find("ObjGraficoSlot").transform.position.x + 4.55f, GameObject.Find("ObjGraficoSlot").transform.position.y + 0.2f,
+                            GameObject.Find("ObjGraficoSlot").transform.position.z - 2), Time.deltaTime * 1.5f / distance);
+
+                        Tutorial.CursorMouse.transform.position = Vector3.Lerp(Tutorial.CursorMouse.transform.position,
+                            new Vector3(GameObject.Find("ObjGraficoSlot").transform.position.x + 4.55f, GameObject.Find("ObjGraficoSlot").transform.position.y + 0.2f,
+                            GameObject.Find("ObjGraficoSlot").transform.position.z - 2), Time.deltaTime * 1.5f / distance);
+                    }
+                    else
+                    {
+                        Tutorial.PrimeiroPassoExecutado = true;
+                        OnMouseUp();
+                        DropPeca.countObjetosGraficos = 0;
+
+                        Tutorial.SetMessageImage(false);
+
+                        Tutorial.passoTutorial = Tutorial.Passo.SegundoPasso;
+                        Tutorial.MensagemTutorial();
+                    }
+                }                
+            }
+            else if (Tutorial.passoTutorial == Tutorial.Passo.SegundoPasso && !Tutorial.SegundoPassoExecutado)
+            {
+                if (Tutorial.AnswerMsg != 0)
+                {
+                    float distance = Tutorial.GetDistance();
+
+                    Tutorial.SetMessageImage(true);
+
+                    if (distance > 0)
+                    {
+                        Tutorial.GOTutorial.transform.position = Vector3.Lerp(Tutorial.GOTutorial.transform.position,
+                            new Vector3(GameObject.Find("FormasSlot").transform.position.x + 3.1f, GameObject.Find("FormasSlot").transform.position.y + 0.2f,
+                            GameObject.Find("FormasSlot").transform.position.z - 3), Time.deltaTime * 1.5f / distance);
+
+                        Tutorial.CursorMouse.transform.position = Vector3.Lerp(Tutorial.CursorMouse.transform.position,
+                            new Vector3(GameObject.Find("FormasSlot").transform.position.x + 3.1f, GameObject.Find("FormasSlot").transform.position.y + 0.2f,
+                            GameObject.Find("FormasSlot").transform.position.z - 3), Time.deltaTime * 1.5f / distance);
+                    }
+                    else
+                    {
+                        Tutorial.SegundoPassoExecutado = true;
+                        OnMouseUp();
+                        DropPeca.countFormas = 0;
+
+                        Tutorial.SetMessageImage(false);
+
+                        Tutorial.passoTutorial = Tutorial.Passo.TerceiroPasso;
+                        Tutorial.MensagemTutorial();
+                    }
+                }                
+            }
+            else if (Tutorial.passoTutorial == Tutorial.Passo.TerceiroPasso && !Tutorial.TerceiroPassoExecutado)
+            {
+                if (Tutorial.AnswerMsg != 0)
+                {
+                    Tutorial.SetMessageImage(true);
+
+                    BotaoPropPadrao btn = new BotaoPropPadrao();
+                    btn.setButton(GameObject.Find("BtnPropPecas"), GameObject.Find(getSohLetras("Cubo")));
+
+                    GameObject.Find("PropCubo").transform.GetChild(0).GetChild(0).GetComponent<TMP_InputField>().text = "Cubo";
+                    GameObject.Find("PropCubo").transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<TMP_InputField>().text = "1";
+                    GameObject.Find("PropCubo").transform.GetChild(1).GetChild(1).GetChild(0).GetComponent<TMP_InputField>().text = "1";
+                    GameObject.Find("PropCubo").transform.GetChild(1).GetChild(2).GetChild(0).GetComponent<TMP_InputField>().text = "1";
+                    GameObject.Find("PropCubo").transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<TMP_InputField>().text = "0";
+                    GameObject.Find("PropCubo").transform.GetChild(2).GetChild(1).GetChild(0).GetComponent<TMP_InputField>().text = "0";
+                    GameObject.Find("PropCubo").transform.GetChild(2).GetChild(2).GetChild(0).GetComponent<TMP_InputField>().text = "0";
+
+                    float distance = Vector3.Distance(Tutorial.CursorMouse.transform.position, GameObject.Find("InputPosicaoXCubo").transform.position);
+                    if (distance > 0)
+                    {
+                        Tutorial.CursorMouse.transform.position = Vector3.Lerp(Tutorial.CursorMouse.transform.position,
+                            new Vector3(GameObject.Find("InputPosicaoXCubo").transform.position.x, GameObject.Find("InputPosicaoXCubo").transform.position.y,
+                            GameObject.Find("InputPosicaoXCubo").transform.position.z), Time.deltaTime * 1.5f / distance);
+                    }
+                    else
+                    {
+                        GameObject.Find("PropCubo").transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<TMP_InputField>().text = "2";
+                        GameObject.Find("CuboAmbiente").transform.localScale = new Vector3(2, 1, 1);
+
+                        Tutorial.TerceiroPassoExecutado = true;
+
+                        Tutorial.SetMessageImage(false);
+
+                        Tutorial.passoTutorial = Tutorial.Passo.QuartoPasso;
+                        Tutorial.MensagemTutorial();
+                    }
+                }                
+            }
+            else if (Tutorial.passoTutorial == Tutorial.Passo.QuartoPasso && !Tutorial.QuartoPassoExecutado)
+            {
+                if (Tutorial.AnswerMsg != 0)
+                {
+                    Tutorial.SetMessageImage(true);
+
+                    float distance = Vector3.Distance(Tutorial.CursorMouse.transform.position, GameObject.Find("BtnFabPecas").transform.position);
+                    if (distance > 0 && Tutorial.Nivel == "4.1")
+                    {
+                        Tutorial.CursorMouse.transform.position = Vector3.Lerp(Tutorial.CursorMouse.transform.position,
+                            new Vector3(GameObject.Find("BtnFabPecas").transform.position.x, GameObject.Find("BtnFabPecas").transform.position.y,
+                            GameObject.Find("BtnFabPecas").transform.position.z), Time.deltaTime * 0.7f / distance);
+                    }
+                    else
+                    {
+                        if (Tutorial.Nivel == "4.1")
+                        {
+                            BotaoFabPecas btn = new BotaoFabPecas();
+                            btn.CallOnMouseDown();
+                        }
+
+                        float distance1 = Vector3.Distance(Tutorial.CursorMouse.transform.position, new Vector3(GameObject.Find("CameraP").transform.position.x, GameObject.Find("CameraP").transform.position.y, GameObject.Find("CameraP").transform.position.z - 1));
+                        if (distance1 > 0 && Tutorial.Nivel == "4.2")
+                        {
+                            Tutorial.CursorMouse.transform.position = Vector3.Lerp(Tutorial.CursorMouse.transform.position,
+                            new Vector3(GameObject.Find("CameraP").transform.position.x, GameObject.Find("CameraP").transform.position.y,
+                            GameObject.Find("CameraP").transform.position.z - 1), Time.deltaTime * 0.7f / distance1);
+                        }
+                        else
+                        {
+                            Tutorial.Nivel = "4.3";
+
+                            float distance2 = Vector3.Distance(Tutorial.CursorMouse.transform.position, new Vector3(GameObject.Find("CameraSlot").transform.position.x + 3,
+                                                                                                                    GameObject.Find("CameraSlot").transform.position.y,
+                                                                                                                    GameObject.Find("CameraSlot").transform.position.z - 1));
+                            if (distance2 > 0)
+                            {
+                                Tutorial.CursorMouse.transform.position = Vector3.Lerp(Tutorial.CursorMouse.transform.position,
+                                    new Vector3(GameObject.Find("CameraSlot").transform.position.x + 3, GameObject.Find("CameraSlot").transform.position.y,
+                                    GameObject.Find("CameraSlot").transform.position.z - 1), Time.deltaTime * 1.5f / distance2);
+
+                                Tutorial.GOTutorial.transform.position = Vector3.Lerp(Tutorial.GOTutorial.transform.position,
+                                    new Vector3(GameObject.Find("CameraSlot").transform.position.x + 3.4f, GameObject.Find("CameraSlot").transform.position.y + 0.1f,
+                                    GameObject.Find("CameraSlot").transform.position.z - 1f), Time.deltaTime * 1.5f / distance2);
+                            }
+                            else
+                            {
+                                OnMouseUp();
+
+                                Tutorial.QuartoPassoExecutado = true;
+
+                                Tutorial.SetMessageImage(false);
+
+                                Tutorial.passoTutorial = Tutorial.Passo.QuintoPasso;
+                                Tutorial.MensagemTutorial();
+                            }
+                        }
+                    }
+                }                    
+            }
+            else if (Tutorial.passoTutorial == Tutorial.Passo.QuintoPasso && !Tutorial.QuitoPassoExecutado)
+            {
+                if (Tutorial.AnswerMsg != 0)
+                {
+                    Tutorial.SetMessageImage(true);
+                    float distance = Vector3.Distance(Tutorial.CursorMouse.transform.position, GameObject.Find("Rotacionar").transform.position);
+
+                    if (distance > 0 && Tutorial.Nivel == "4.1")
+                    {
+                        Tutorial.CursorMouse.transform.position = Vector3.Lerp(Tutorial.CursorMouse.transform.position,
+                            new Vector3(GameObject.Find("Rotacionar").transform.position.x, GameObject.Find("Rotacionar").transform.position.y,
+                            GameObject.Find("Rotacionar").transform.position.z), Time.deltaTime * 1.5f / distance);
+                    }
+                    else
+                    {
+                        float distance1 = Vector3.Distance(Tutorial.CursorMouse.transform.position, new Vector3(GameObject.Find("TransformacoesSlot").transform.position.x + 3.8f,
+                                                                                                                GameObject.Find("TransformacoesSlot").transform.position.y,
+                                                                                                                GameObject.Find("TransformacoesSlot").transform.position.z - 2));
+                        if ((distance1 > 0) && (Tutorial.Nivel == "4.1" || Tutorial.Nivel == "4.2"))
+                        {
+                            Tutorial.CursorMouse.transform.position = Vector3.Lerp(Tutorial.CursorMouse.transform.position,
+                                new Vector3(GameObject.Find("TransformacoesSlot").transform.position.x + 3.8f, GameObject.Find("TransformacoesSlot").transform.position.y,
+                                GameObject.Find("TransformacoesSlot").transform.position.z - 2), Time.deltaTime * 1.5f / distance1);
+
+                            Tutorial.GOTutorial.transform.position = Vector3.Lerp(Tutorial.GOTutorial.transform.position,
+                                    new Vector3(GameObject.Find("TransformacoesSlot").transform.position.x + 3.8f,
+                                                GameObject.Find("TransformacoesSlot").transform.position.y,
+                                                GameObject.Find("TransformacoesSlot").transform.position.z), Time.deltaTime * 1.5f / distance1);
+
+                            Tutorial.Nivel = "4.2";
+                        }
+                        else
+                        {
+                            if (Tutorial.Nivel == "4.2")
+                            {
+                                Tutorial.Nivel = "4.3";
+                                OnMouseUp();
+
+                                GameObject.Find("CuboAmbiente").transform.localScale = new Vector3(2, 1, 1);
+
+                                BotaoPropPadrao btn = new BotaoPropPadrao();
+                                btn.setButton(GameObject.Find("BtnPropPecas"), GameObject.Find(getSohLetras("Rotacionar")));
+
+                                GameObject.Find("PropRotacionar").transform.GetChild(0).GetChild(0).GetComponent<TMP_InputField>().text = "Rotacionar";
+                                GameObject.Find("PropRotacionar").transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<TMP_InputField>().text = "0";
+                                GameObject.Find("PropRotacionar").transform.GetChild(1).GetChild(1).GetChild(0).GetComponent<TMP_InputField>().text = "0";
+                                GameObject.Find("PropRotacionar").transform.GetChild(1).GetChild(2).GetChild(0).GetComponent<TMP_InputField>().text = "0";
+                            }
+
+                            float distance2 = Vector3.Distance(Tutorial.CursorMouse.transform.position, new Vector3(GameObject.Find("InputYRotacionar").transform.position.x,
+                                                                                                                    GameObject.Find("InputYRotacionar").transform.position.y,
+                                                                                                                    GameObject.Find("InputYRotacionar").transform.position.z));
+                            if (distance2 > 0)
+                            {
+                                Tutorial.CursorMouse.transform.position = Vector3.Lerp(Tutorial.CursorMouse.transform.position,
+                                new Vector3(GameObject.Find("InputYRotacionar").transform.position.x, GameObject.Find("InputYRotacionar").transform.position.y,
+                                GameObject.Find("InputYRotacionar").transform.position.z), Time.deltaTime * 1.5f / distance2);
+                            }
+                            else
+                            {
+                                GameObject.Find("PropRotacionar").transform.GetChild(1).GetChild(1).GetChild(0).GetComponent<TMP_InputField>().text = "45";
+
+                                GameObject.Find("CuboAmbiente").transform.localScale = new Vector3(2, 1, 1);
+                                GameObject.Find("CuboAmbiente").transform.localRotation = Quaternion.Euler(GameObject.Find("CuboAmbiente").transform.localRotation.x,
+                                                                                                           45,
+                                                                                                           GameObject.Find("CuboAmbiente").transform.localRotation.z);
+
+
+
+                                Tutorial.QuitoPassoExecutado = true;
+                                DropPeca.countFormas = 0;
+
+                                Tutorial.SetMessageImage(false);
+
+                                Tutorial.passoTutorial = Tutorial.Passo.SextoPasso;
+                                Tutorial.MensagemTutorial();
+                            }
+                        }
+                    }
+                }
+                    
+            }
+            else if (Tutorial.passoTutorial == Tutorial.Passo.SextoPasso && !Tutorial.SextoPassoExecutado)
+            {
+
+                if (Tutorial.AnswerMsg != 0)
+                {
+                    Tutorial.SetMessageImage(true);
+
+                    float distance = Vector3.Distance(Tutorial.CursorMouse.transform.position, GameObject.Find("BtnFabPecas").transform.position);
+                    if (distance > 0 && Tutorial.Nivel == "4.1")
+                    {
+                        Tutorial.CursorMouse.transform.position = Vector3.Lerp(Tutorial.CursorMouse.transform.position,
+                            new Vector3(GameObject.Find("BtnFabPecas").transform.position.x, GameObject.Find("BtnFabPecas").transform.position.y,
+                            GameObject.Find("BtnFabPecas").transform.position.z), Time.deltaTime * 0.5f / distance);
+                    }
+                    else
+                    {
+                        if (Tutorial.Nivel == "4.1")
+                        {
+                            BotaoFabPecas btn = new BotaoFabPecas();
+                            btn.CallOnMouseDown();
+
+                            Tutorial.CursorMouse.transform.position = new Vector3(GameObject.Find("Iluminacao").transform.position.x, GameObject.Find("Iluminacao").transform.position.y,
+                            GameObject.Find("Iluminacao").transform.position.z);
+                        }
+
+                        float distance1 = Tutorial.GetDistance();
+                        if (distance1 > 0 && Tutorial.Nivel == "4.2")
+                        {
+                            Tutorial.GOTutorial.transform.position = Vector3.Lerp(Tutorial.GOTutorial.transform.position,
+                                new Vector3(GameObject.Find("IluminacaoSlot").transform.position.x + 5.1f, GameObject.Find("IluminacaoSlot").transform.position.y + 0.9f,
+                                GameObject.Find("IluminacaoSlot").transform.position.z - 4), Time.deltaTime * 1.5f / distance1);
+
+                            Tutorial.CursorMouse.transform.position = Vector3.Lerp(Tutorial.CursorMouse.transform.position,
+                                new Vector3(GameObject.Find("IluminacaoSlot").transform.position.x + 3.1f, GameObject.Find("IluminacaoSlot").transform.position.y + 0.2f,
+                                GameObject.Find("IluminacaoSlot").transform.position.z - 5), Time.deltaTime * 1.5f / distance1);
+                        }
+                        else
+                        {
+                            Tutorial.Nivel = "4.3";
+
+                            Tutorial.SextoPassoExecutado = true;
+                            OnMouseUp();
+                            DropPeca.countFormas = 0;
+
+                            Tutorial.SetMessageImage(false);
+
+                            Tutorial.passoTutorial = Tutorial.Passo.UltimoPasso;
+                            //Tutorial.MensagemTutorial();
+                        }
+                    }
+                }                    
+            }
+            else if (Tutorial.passoTutorial == Tutorial.Passo.UltimoPasso)
+            {
+                Tutorial.MensagemTutorial();
+            }
+        }
     }
 
     void OnMouseDown()
@@ -86,7 +391,7 @@ public class Controller : MonoBehaviour {
         offset = scanPos - cam.ScreenToWorldPoint(
             new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
 
-        podeGerarCopia = screenPoint.y > cam.pixelRect.height / 2;    
+        podeGerarCopia = screenPoint.y > cam.pixelRect.height / 2;                   
 
         if (podeGerarCopia)
         {
@@ -164,18 +469,19 @@ public class Controller : MonoBehaviour {
             Global.podeExcruiObjeto = false;
             processaExclusao();            
         }            
-        else if (podeEncaixar())
+        else if (podeEncaixar() || Tutorial.estaExecutandoTutorial)
         {  
             float incX = 0;
-            float incY = 0;            
-
-            Global.addObject(gameObject);
+            float incY = 0; 
+            
+            if (!Tutorial.estaExecutandoTutorial)
+                Global.addObject(gameObject);
 
             ajustaPecaAoSlot(ref incX, ref incY);
 
-            if (podeGerarCopia)
+            if (podeGerarCopia || Tutorial.estaExecutandoTutorial)
             {
-                if (gameObject.name.Contains("Transladar") || gameObject.name.Contains("Rotacionar") || gameObject.name.Contains("Escalar"))
+                if ((Tutorial.estaExecutandoTutorial && Tutorial.passoTutorial == Tutorial.Passo.QuintoPasso) || (!Tutorial.estaExecutandoTutorial && (gameObject.name.Contains("Transladar") || gameObject.name.Contains("Rotacionar") || gameObject.name.Contains("Escalar"))))
                 {    
                     string numObjetoGrafico = getNumeroSlotObjetoGrafico();
                     GameObject ObjGrafSlot = GameObject.Find("ObjGraficoSlot" + numObjetoGrafico);
@@ -193,6 +499,9 @@ public class Controller : MonoBehaviour {
                             }                                
                         }
                     }
+
+                    if (Tutorial.estaExecutandoTutorial)
+                        slot = "TransformacoesSlot";
 
                     int val = 0;
                     string countTransformacoes = "";
@@ -220,16 +529,19 @@ public class Controller : MonoBehaviour {
                    
                     concatNumber = numObjetoGrafico;
 
-                    addGameObjectTree("GameObjectAmb" + getNumeroSlotObjetoGrafico(), AMB, "CuboAmbiente" + getNumeroSlotObjetoGrafico());
-                    addGameObjectTree("CuboVisObject" + getNumeroSlotObjetoGrafico(), VIS, "CuboVis" + getNumeroSlotObjetoGrafico());
+                    if (!Tutorial.estaExecutandoTutorial)
+                    {
+                        addGameObjectTree("GameObjectAmb" + getNumeroSlotObjetoGrafico(), AMB, "CuboAmbiente" + getNumeroSlotObjetoGrafico());
+                        addGameObjectTree("CuboVisObject" + getNumeroSlotObjetoGrafico(), VIS, "CuboVis" + getNumeroSlotObjetoGrafico());
+                    }                    
 
                     configuraIluminacao("-");
 
                     reorganizaObjetos(numObjetoGrafico);
 
                 }
-                else if (gameObject.name.Contains("ObjetoGrafico"))
-                {
+                else if ((Tutorial.estaExecutandoTutorial && Tutorial.passoTutorial == Tutorial.Passo.PrimeiroPasso) || (!Tutorial.estaExecutandoTutorial && gameObject.name.Contains("ObjetoGrafico")))
+                {  
                     if (DropPeca.countObjetosGraficos == 0)
                     {
                         if (criaFormas == null)
@@ -263,74 +575,84 @@ public class Controller : MonoBehaviour {
                     renderController.ResizeBases(t, Consts.ObjetoGrafico, true);
                     adicionaObjetoRender();                    
                 }
-                else if (gameObject.name.Contains("Cubo"))
-                {        
-                    string numFormas = "";
-                    GameObject t;
-
-                    numFormas = getNumeroSlotObjetoGrafico();                    
-
-                    t = GameObject.Find("FormasSlot" + numFormas);
-
-                    posicaoColliderDestino = t;                     
-                    adicionaObjetoRender();
-
-                    if (Global.cameraAtiva && new PropIluminacaoPadrao().existeIluminacao())
-                        GameObject.Find("CameraVisInferior").GetComponent<Camera>().cullingMask = 1 << LayerMask.NameToLayer("Formas");
-
-                    // Verificar se o Objeto Gráfico pai está ativo para demonstrar o cubo.
-                    string goObjGraficoSlot = GameObject.Find(Global.listaEncaixes[gameObject.name]).transform.parent.name;
-
-                    string peca = string.Empty;
-
-                    // Verifica peça conectada ao slot
-                    foreach (KeyValuePair<string, string> pecas in Global.listaEncaixes)
+                else if ((Tutorial.estaExecutandoTutorial && Tutorial.passoTutorial == Tutorial.Passo.SegundoPasso) || (!Tutorial.estaExecutandoTutorial && gameObject.name.Contains("Cubo")))
+                {      
+                    if (GameObject.Find("CuboAmbiente" + getNumeroSlotObjetoGrafico()) != null)
                     {
-                        if (Equals(pecas.Value, goObjGraficoSlot))
+                        string numFormas = "";
+                        GameObject t;
+
+                        numFormas = getNumeroSlotObjetoGrafico();
+
+                        t = GameObject.Find("FormasSlot" + numFormas);
+
+                        posicaoColliderDestino = t;
+                        adicionaObjetoRender();
+
+                        if (!Tutorial.estaExecutandoTutorial && GameObject.Find(Global.listaEncaixes[gameObject.name]) != null)
                         {
-                            peca = pecas.Key;
-                            break;
-                        }
-                    }
-                    
-                    MeshRenderer mr = GameObject.Find("CuboAmbiente" + getNumeroSlotObjetoGrafico()).GetComponent<MeshRenderer>();
+                            if (Global.cameraAtiva && new PropIluminacaoPadrao().existeIluminacao())
+                                GameObject.Find("CameraVisInferior").GetComponent<Camera>().cullingMask = 1 << LayerMask.NameToLayer("Formas");
 
-                    bool statusCubo = false;
+                            // Verificar se o Objeto Gráfico pai está ativo para demonstrar o cubo.
+                            string goObjGraficoSlot = GameObject.Find(Global.listaEncaixes[gameObject.name]).transform.parent.name;
 
-                    // Verifica se o Objeto Gráfico ja foi clicado.
-                    foreach (KeyValuePair<string, PropriedadePeca> pec in Global.propriedadePecas)
-                    {                            
-                        if (Equals(pec.Key, peca))
-                        {
-                            if (Global.propriedadePecas[peca].Ativo)
-                                statusCubo = true;                            
-                        }
-                        else
-                            statusCubo = true;                      
-                    }            
-                    
-                    if (statusCubo || Global.propriedadePecas.Count == 0)
-                        mr.enabled = true;
+                            string peca = string.Empty;
 
-                    #region Código antigo             
+                            // Verifica peça conectada ao slot
+                            foreach (KeyValuePair<string, string> pecas in Global.listaEncaixes)
+                            {
+                                if (Equals(pecas.Value, goObjGraficoSlot))
+                                {
+                                    peca = pecas.Key;
+                                    break;
+                                }
+                            }
 
-                    foreach (KeyValuePair<string, string> slot in Global.listaEncaixes)
-                    {
-                        if (Equals(slot.Value, "IluminacaoSlot" + getNumeroSlotObjetoGrafico()))
-                        {
-                            mr = GameObject.Find("CuboVis" + getNumeroSlotObjetoGrafico()).GetComponent<MeshRenderer>();
+                            MeshRenderer mr = GameObject.Find("CuboAmbiente" + getNumeroSlotObjetoGrafico()).GetComponent<MeshRenderer>();
 
-                            if (Global.cameraAtiva)
+                            bool statusCubo = false;
+
+                            // Verifica se o Objeto Gráfico ja foi clicado.
+                            foreach (KeyValuePair<string, PropriedadePeca> pec in Global.propriedadePecas)
+                            {
+                                if (Equals(pec.Key, peca))
+                                {
+                                    if (Global.propriedadePecas[peca].Ativo)
+                                        statusCubo = true;
+                                }
+                                else
+                                    statusCubo = true;
+                            }
+
+                            if (statusCubo || Global.propriedadePecas.Count == 0)
                                 mr.enabled = true;
 
-                            Global.cuboVisComIluminacao.Add(mr.name);
-                            break;
+                            #region Código antigo             
+
+                            foreach (KeyValuePair<string, string> slot in Global.listaEncaixes)
+                            {
+                                if (Equals(slot.Value, "IluminacaoSlot" + getNumeroSlotObjetoGrafico()))
+                                {
+                                    mr = GameObject.Find("CuboVis" + getNumeroSlotObjetoGrafico()).GetComponent<MeshRenderer>();
+
+                                    if (Global.cameraAtiva)
+                                        mr.enabled = true;
+
+                                    Global.cuboVisComIluminacao.Add(mr.name);
+                                    break;
+                                }
+                            }
+                            #endregion
+                        }
+                        else
+                        {
+                            GameObject.Find("CuboAmbiente" + getNumeroSlotObjetoGrafico()).GetComponent<MeshRenderer>().enabled = true;
                         }
                     }
-                    #endregion
+                    
                 }
-
-                else if (gameObject.name.Contains("Iluminacao"))
+                else if ((Tutorial.estaExecutandoTutorial && Tutorial.passoTutorial == Tutorial.Passo.SextoPasso) || (!Tutorial.estaExecutandoTutorial && gameObject.name.Contains("Iluminacao")))
                 {
                     string numIlum = "";
                     GameObject t;
@@ -346,38 +668,40 @@ public class Controller : MonoBehaviour {
                     if (Global.cameraAtiva)
                         GameObject.Find("CameraVisInferior").GetComponent<Camera>().cullingMask = 1 << LayerMask.NameToLayer("Formas");
 
-                    PropriedadePeca prPeca = new PropriedadePeca();
-                    prPeca.Nome = gameObject.name;
-                    prPeca.PodeAtualizar = true;
-                    prPeca.NomeCuboAmbiente = "CuboAmbiente" + getNumObjeto(Global.listaEncaixes[gameObject.name]);
-                    prPeca.NomeCuboVis = "CuboVis" + getNumObjeto(Global.listaEncaixes[gameObject.name]);
-                    prPeca.TipoLuz = 0;
-                    Global.propriedadePecas.Add(gameObject.name, prPeca);
-
-                    if (gameObject.name.Length > "Iluminacao".Length)
-                        CriaLightObject(gameObject.name.Substring("Iluminacao".Length, 1));
-
-                    #region Código antigo
-                    MeshRenderer mr = GameObject.Find("CuboVis" + getNumeroSlotObjetoGrafico()).GetComponent<MeshRenderer>();
-                    mr.enabled = true;
-
-                    foreach (KeyValuePair<string, string> slot in Global.listaEncaixes)
+                    if (!Tutorial.estaExecutandoTutorial)
                     {
-                        if (Equals(slot.Value, "FormasSlot" + getNumeroSlotObjetoGrafico()))
+                        PropriedadePeca prPeca = new PropriedadePeca();
+                        prPeca.Nome = gameObject.name;
+                        prPeca.PodeAtualizar = true;
+                        prPeca.NomeCuboAmbiente = "CuboAmbiente" + getNumObjeto(Global.listaEncaixes[gameObject.name]);
+                        prPeca.NomeCuboVis = "CuboVis" + getNumObjeto(Global.listaEncaixes[gameObject.name]);
+                        prPeca.TipoLuz = 0;
+                        Global.propriedadePecas.Add(gameObject.name, prPeca);
+
+                        if (gameObject.name.Length > "Iluminacao".Length)
+                            CriaLightObject(gameObject.name.Substring("Iluminacao".Length, 1));
+
+                        #region Código antigo
+                        MeshRenderer mr = GameObject.Find("CuboVis" + getNumeroSlotObjetoGrafico()).GetComponent<MeshRenderer>();
+                        mr.enabled = true;
+
+                        foreach (KeyValuePair<string, string> slot in Global.listaEncaixes)
                         {
-                            mr = GameObject.Find("CuboVis" + getNumeroSlotObjetoGrafico()).GetComponent<MeshRenderer>();
+                            if (Equals(slot.Value, "FormasSlot" + getNumeroSlotObjetoGrafico()))
+                            {
+                                mr = GameObject.Find("CuboVis" + getNumeroSlotObjetoGrafico()).GetComponent<MeshRenderer>();
 
-                            if (Global.cameraAtiva)
-                                mr.enabled = true;
+                                if (Global.cameraAtiva)
+                                    mr.enabled = true;
 
-                            Global.cuboVisComIluminacao.Add(mr.name);
-                            break;
+                                Global.cuboVisComIluminacao.Add(mr.name);
+                                break;
+                            }
                         }
+                        #endregion
                     }
-                    #endregion
-
                 }
-                else if (gameObject.name.Contains("Camera"))
+                else if ((Tutorial.estaExecutandoTutorial && Tutorial.passoTutorial == Tutorial.Passo.QuartoPasso) || (!Tutorial.estaExecutandoTutorial && gameObject.name.Contains("Camera")))
                 {
                     PropIluminacaoPadrao lightProperty = new PropIluminacaoPadrao();
 
@@ -404,12 +728,15 @@ public class Controller : MonoBehaviour {
             }
             // A posição x é incrementada para que a peça fique no local correto.
 
-            posColliderDestinoX = posicaoColliderDestino.transform.position.x + incX;
-            posColliderDestinoY = posicaoColliderDestino.transform.position.y - incY;
-            posColliderDestinoZ = posicaoColliderDestino.transform.position.z;
+            if (!Tutorial.estaExecutandoTutorial)
+            {
+                posColliderDestinoX = posicaoColliderDestino.transform.position.x + incX;
+                posColliderDestinoY = posicaoColliderDestino.transform.position.y - incY;
+                posColliderDestinoZ = posicaoColliderDestino.transform.position.z;
 
-            transform.position = new Vector3(posColliderDestinoX, posColliderDestinoY, posColliderDestinoZ);
-            pecaJaEncaixada = true;
+                transform.position = new Vector3(posColliderDestinoX, posColliderDestinoY, posColliderDestinoZ);
+                pecaJaEncaixada = true;
+            }            
         }
         else
         {
@@ -435,10 +762,14 @@ public class Controller : MonoBehaviour {
 
                 GameObject newPosition = GameObject.Find(Global.listaEncaixes[gameObject.name]);
 
-                ajustaPecaAoSlot(ref incX, ref incY);
-                transform.position = new Vector3(newPosition.transform.position.x + incX,
-                                                 newPosition.transform.position.y - incY,
-                                                 newPosition.transform.position.z);
+                if (newPosition != null)
+                {
+                    ajustaPecaAoSlot(ref incX, ref incY);
+                    transform.position = new Vector3(newPosition.transform.position.x + incX,
+                                                     newPosition.transform.position.y - incY,
+                                                     newPosition.transform.position.z);
+                }
+                
             }
 
         }
@@ -592,8 +923,12 @@ public class Controller : MonoBehaviour {
         // Se a peça "Iluminação já foi selecionada, será devidamente reposicionada"        
         GameObject IlumPeca = GameObject.Find("Iluminacao" + concatNumber);
 
-        if (Global.listaObjetos.Contains(IlumPeca))
-            IlumPeca.transform.position = new Vector3(IlumPeca.transform.position.x, pos.y, IlumPeca.transform.position.z);  
+        if (!Tutorial.estaExecutandoTutorial)
+        {
+            if (Global.listaObjetos.Contains(IlumPeca))
+                IlumPeca.transform.position = new Vector3(IlumPeca.transform.position.x, pos.y, IlumPeca.transform.position.z);
+        }
+        
     }
 
 
@@ -616,35 +951,48 @@ public class Controller : MonoBehaviour {
     // mainGameObject  = nome do GameObject princial
     private void addGameObjectTree(string firstNameObject, string extensionName, string mainGameObject)
     {     
-        GameObject goUltimo = GameObject.Find(firstNameObject);
+        GameObject goFirst = GameObject.Find(firstNameObject);
 
-        try
+        if (goFirst.transform.GetChild(0).name.Contains("CuboAmbiente"))
         {
-            while (goUltimo.transform.GetChild(0).name != string.Empty)
-            {
-                if (Equals(goUltimo.transform.GetChild(0).name, mainGameObject))
-                    goUltimo = GameObject.Find(goUltimo.transform.GetChild(1).name);
-                else if (goUltimo.transform.GetChild(0).name.Contains("CuboAmbiente") || goUltimo.transform.GetChild(0).name.Contains("CuboVis"))
-                    break;
-                else
-                    goUltimo = GameObject.Find(goUltimo.transform.GetChild(0).name);
-            }
+            GameObject go = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity);
+            go.name = gameObject.name + extensionName;
+            go.transform.parent = goFirst.transform;
+
+            GameObject mainGO = GameObject.Find(mainGameObject);
+
+            if (mainGO != null)
+                mainGO.transform.parent = go.transform;
+
+            zerarTransform(go);
+            zerarTransform(mainGO);
         }
-        catch (Exception) { }
+        else
+        {
+            GameObject go = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity);
+            go.name = gameObject.name + extensionName;
 
-        GameObject objPai = GameObject.Find(goUltimo.name);
-        GameObject go = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity);
+            goFirst.transform.GetChild(0).parent = go.transform;
 
-        go.name = gameObject.name + extensionName;
-        go.transform.parent = objPai.transform;
+            go.transform.parent = goFirst.transform;
 
-        GameObject mainGO = GameObject.Find(mainGameObject);
+            zerarTransform(go);
+        }
 
-        if (mainGO != null)
-            mainGO.transform.parent = go.transform;
+        AtualizaTrasformGameObjectAmb();
 
-        zerarTransform(go);
-        zerarTransform(mainGO);
+        //GameObject objPai = GameObject.Find(goUltimo.name);
+        //GameObject go = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity);
+
+        //go.name = gameObject.name + extensionName;
+        //go.transform.parent = objPai.transform;
+
+        //GameObject mainGO = GameObject.Find(mainGameObject);
+
+        //if (mainGO != null)
+        //    mainGO.transform.parent = go.transform;
+
+
     }
 
     private void createGameObjectTree(int numObj)
@@ -749,7 +1097,10 @@ public class Controller : MonoBehaviour {
                     && !Global.listaEncaixes.ContainsValue(slot.Key))
                 {
                     if (!Global.listaEncaixes.ContainsKey(gameObject.transform.name))
-                        Global.listaEncaixes.Add(gameObject.transform.name, slot.Key);
+                    {
+                        if (GameObject.Find(slot.Key) != null)
+                            Global.listaEncaixes.Add(gameObject.transform.name, slot.Key);
+                    }                        
                     else if (Global.listaEncaixes.ContainsKey(gameObject.transform.name) 
                         && Global.listaEncaixes[gameObject.name] != slot.Key)
                     {
@@ -759,7 +1110,10 @@ public class Controller : MonoBehaviour {
                     else
                         return false;
 
-                    return true;
+                    if (GameObject.Find(slot.Key) != null)
+                        return true;
+                    else
+                        return false;
                 }
             }
         }
@@ -1042,7 +1396,9 @@ public class Controller : MonoBehaviour {
 
             Global.listaEncaixes.Remove(gameObject.name);
             Global.propriedadePecas.Remove(gameObject.name);
-        }            
+        }
+
+        new BotaoFabPecas().CallOnMouseDown();
     }
 
     private string getNumeroSlotObjetoGrafico()
@@ -1293,63 +1649,15 @@ public class Controller : MonoBehaviour {
     private void reposicionaPosicaoAmbCuboVis()
     {
         GameObject goAmb = GameObject.Find("GameObjectAmb" + getNumeroSlotObjetoGrafico());
-
-        GameObject goUltimo = GameObject.Find(goAmb.name);
-
-        // Retorna ultimo Objeto de GameObjectAmb
-        try
-        {
-            while (goUltimo.transform.GetChild(0).name != string.Empty)
-            {     
-                if (Equals(goUltimo.transform.GetChild(0).name, "CuboAmbiente" + getNumeroSlotObjetoGrafico()))
-                    goUltimo = GameObject.Find(goUltimo.transform.GetChild(1).name);
-                else
-                    goUltimo = GameObject.Find(goUltimo.transform.GetChild(0).name);
-            }
-        }
-        catch (Exception e) { }  
-        
         GameObject goTroca = GameObject.Find(gameObject.name + AMB);
 
-        // Altera o parent do filho da peça selecionada para o pai da peça selecionada
-        goTroca.transform.GetChild(0).parent = goTroca.transform.parent;
-
-        // Altera o parent da peça selecionada para o ultimo objeto
-        goTroca.transform.parent = goUltimo.transform;
-
-        // Altera o parent do CuboAmbiente para a peça atual
-        GameObject goCuboAmb = GameObject.Find("CuboAmbiente" + getNumeroSlotObjetoGrafico());
-
-        if (goCuboAmb != null)
-            goCuboAmb.transform.parent = goTroca.transform;
-
-        // Faz o mesmo procedimento com CuboVisObject
-        GameObject goVis = GameObject.Find("CuboVisObject" + getNumeroSlotObjetoGrafico());
-
-        goUltimo = GameObject.Find(goVis.name);
-
-        // Retorna ultimo Objeto de CuboVisObject
-        try
+        if (!Equals(goAmb.transform.GetChild(0).name, goTroca.name))
         {
-            while (goUltimo.transform.GetChild(0).name != string.Empty)
-            {
-                if (Equals(goUltimo.transform.GetChild(0).name, "CuboVis" + getNumeroSlotObjetoGrafico()))
-                    goUltimo = GameObject.Find(goUltimo.transform.GetChild(1).name);
-                else
-                    goUltimo = GameObject.Find(goUltimo.transform.GetChild(0).name);
-            }
-        }
-        catch (Exception) { }
+            goTroca.transform.GetChild(0).parent = goTroca.transform.parent;
+            goTroca.transform.parent = goAmb.transform;
 
-        GameObject goTrocaVis = GameObject.Find(gameObject.name + VIS);
-
-        goTrocaVis.transform.GetChild(0).parent = goTrocaVis.transform.parent;
-        goTrocaVis.transform.parent = goUltimo.transform;
-
-        GameObject goCuboVis = GameObject.Find("CuboVis" + getNumeroSlotObjetoGrafico());
-
-        if (goCuboVis != null)
-            goCuboVis.transform.parent = goTrocaVis.transform;
+            goAmb.transform.GetChild(0).parent = goTroca.transform;
+        }   
 
     }
 
@@ -1480,8 +1788,12 @@ public class Controller : MonoBehaviour {
     }  
     
     private void AtualizaTrasformGameObjectAmb()
-    {     
-        string nomeAmb = "GameObjectAmb" + getNumObjeto(GameObject.Find(Global.listaEncaixes[gameObject.name]).transform.parent.name);
+    {
+        string nomeAmb = "GameObjectAmb";
+
+        if (!Tutorial.estaExecutandoTutorial)            
+            nomeAmb += getNumObjeto(GameObject.Find(Global.listaEncaixes[gameObject.name]).transform.parent.name);
+
         int cont = 0;
         int breakLoop = 50;
 
@@ -1533,21 +1845,30 @@ public class Controller : MonoBehaviour {
 
             if (GoAmb.name.Contains(Consts.Transladar))
             {
+                if (!Global.propriedadePecas.ContainsKey(gameObject.name))
+                    GoAmb.localPosition = Vector3.zero;
+
                 GoAmb.localRotation = Quaternion.Euler(0, 0, 0);
                 GoAmb.localScale = new Vector3(1, 1, 1);
             }
             else if (GoAmb.name.Contains(Consts.Rotacionar))
             {
+                if (!Global.propriedadePecas.ContainsKey(gameObject.name))
+                    GoAmb.localRotation = Quaternion.Euler(0, 0, 0);
+
                 GoAmb.localPosition = Vector3.zero;
                 GoAmb.localScale = new Vector3(1, 1, 1);
             }
             else if (GoAmb.name.Contains(Consts.Escalar))
             {
+                if (!Global.propriedadePecas.ContainsKey(gameObject.name))
+                    GoAmb.localScale = new Vector3(1, 1, 1);
+
                 GoAmb.localPosition = Vector3.zero;
                 GoAmb.localRotation = Quaternion.Euler(0, 0, 0);                
             }  
 
             cont++;
         }
-    }
+    }   
 }
